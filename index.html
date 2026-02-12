@@ -365,7 +365,6 @@
 
     // 语音按钮点击（纯原生，无后端残留）
     voiceBtn.addEventListener('click', () => {
-      if (!nativeRecognition) initNativeRecognition();
       if (voiceBtn.disabled) return;
       if (!isListening) {
         nativeRecognition.start();
