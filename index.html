@@ -383,23 +383,50 @@
     });
 
     // ---------- PWA 安装 & Service Worker ----------
-    let deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'block';
-    });
+    // ---------- PWA 安装检测 ----------
+let deferredPrompt = null;
 
-    installBtn.addEventListener('click', () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') updateStatus('已安装到设备', 'normal');
-          deferredPrompt = null;
-          installBtn.style.display = 'none';
-        });
+function isPwaInstalled() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.matchMedia("(display-mode: window-controls-overlay)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // 仅在未安装时显示按钮
+  if (!isPwaInstalled()) {
+    installBtn.style.display = "block";
+  }
+});
+
+window.addEventListener("appinstalled", () => {
+  installBtn.style.display = "none";
+  deferredPrompt = null;
+  console.log("PWA installed");
+});
+
+installBtn.addEventListener("click", () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        updateStatus("已安装到设备", "normal");
       }
+      deferredPrompt = null;
+      installBtn.style.display = "none";
     });
+  }
+});
+
+// 页面启动时立即检查
+if (isPwaInstalled()) {
+  installBtn.style.display = "none";
+}
+
 
     // Service Worker 注册（离线缓存）
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
