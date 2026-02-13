@@ -1,10 +1,12 @@
 {
     "name": "语音标记计时器",
     "short_name": "计时器",
-    "description": "支持语音控制开始/暂停/标记", // 新增：应用描述
-    "id": "/stopwatch", // 新增：应用唯一ID
-    "start_url": "/",
+    "description": "支持语音控制开始/暂停/标记",
+    "id": "/stopwatch",
+    "start_url": "/timer-web/",
+    "scope": "/timer-web/",
     "display": "standalone",
+    "display_override": ["standalone", "minimal-ui", "browser"],
     "background_color": "#1a1a2e",
     "theme_color": "#3498db",
     "icons": [
@@ -39,4 +41,4 @@
             "type": "image/png"
         }
     ]
-} // 【修正点2】文件末尾必须有一个闭合的大括号
+}
