@@ -1,6 +1,6 @@
 const CACHE_NAME = 'voice-timer-v1';
 const OFFLINE_URL = '/index.html';
-const PRECACHE_URLS = ['/', '/index.html'];
+const PRECACHE_URLS = ['/timer-web/', '/timer-web/index.html'];
 
 self.addEventListener('install', event => {
   console.log('[Service Worker] 安装中...');
