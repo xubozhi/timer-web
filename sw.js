@@ -1,4 +1,4 @@
-const CACHE_NAME = 'voice-timer-v2';
+const CACHE_NAME = 'voice-timer-v3';
 const OFFLINE_URL = '/index.html';
 const PRECACHE_URLS = ['/timer-web/', '/timer-web/index.html'];
 
