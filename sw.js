@@ -1,56 +1,62 @@
-const CACHE_NAME = 'voice-timer-v3';
-const OFFLINE_URL = '/index.html';
-const PRECACHE_URLS = ['/timer-web/', '/timer-web/index.html'];
+// sw.js 核心修改部分
 
+const CACHE_NAME = 'timer-cache-v4'; // 重要：升级版本号，强制更新
+const PRECACHE_URLS = [
+  '/timer-web/',          // 注意：这是目录，通常会匹配 index.html
+  '/timer-web/index.html',
+  '/timer-web/manifest.json'
+  // 如果有其他需要预缓存的文件，也列在这里
+];
+const OFFLINE_URL = '/timer-web/index.html'; // 明确指定离线回退页面
+
+// 安装事件：预缓存关键文件
 self.addEventListener('install', event => {
-  console.log('[Service Worker] 安装中...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(PRECACHE_URLS))
+      // 强制当前等待的 Service Worker 进入激活状态
       .then(() => self.skipWaiting())
   );
 });
 
+// 激活事件：清理旧缓存
 self.addEventListener('activate', event => {
-  console.log('[Service Worker] 激活中，清理旧缓存...');
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(name => name !== CACHE_NAME && caches.delete(name))
-      );
-    }).then(() => self.clients.claim())
+    caches.keys().then(keyList => {
+      return Promise.all(keyList.map(key => {
+        if (key !== CACHE_NAME) {
+          return caches.delete(key);
+        }
+      }));
+    }).then(() => self.clients.claim()) // 立即接管所有客户端
   );
 });
 
+// 关键修复：fetch 事件处理，防止死循环
 self.addEventListener('fetch', event => {
-  // 对页面导航请求使用“网络优先，失败后缓存”的策略
+  // 只处理 GET 请求
+  if (event.request.method !== 'GET') return;
+
+  // 处理导航请求（即页面请求）
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match(OFFLINE_URL))
+      fetch(event.request)
+        .catch(() => {
+          // 网络失败时，返回离线回退页面
+          return caches.match(OFFLINE_URL);
+        })
     );
     return;
   }
 
-  // 对其他资源（CSS， 内联JS等）使用“缓存优先，网络回退”的策略
+  // 处理其他静态资源请求：缓存优先策略
   event.respondWith(
     caches.match(event.request)
       .then(cachedResponse => {
         if (cachedResponse) {
           return cachedResponse;
         }
-        // 克隆请求，因为它是“流”，只能使用一次
-        return fetch(event.request).then(networkResponse => {
-          if (!networkResponse || networkResponse.status !== 200) {
-            return networkResponse;
-          }
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME)
-            .then(cache => cache.put(event.request, responseToCache));
-          return networkResponse;
-        });
-      }).catch(error => {
-        console.error('[Service Worker] 获取失败:', error);
-        // 对于非导航请求，可以返回一个自定义错误或什么都不做
+        return fetch(event.request);
       })
   );
 });

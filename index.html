@@ -160,6 +160,7 @@
     let elapsedTime = 0;
     let isRunning = false;
     let timeNodes = [];
+    let reconnectTimeout; // 用于语音识别自动重连的定时器
 
     const timerEl = document.getElementById('timer');
     const startBtn = document.getElementById('startBtn');
@@ -301,81 +302,78 @@
       statusBar.classList.add(type);
     }
 
-    // ---------- 纯前端原生语音识别（已彻底移除后端）--------
-    let nativeRecognition = null;
-    let isListening = false;
+// ---------- 纯前端原生语音识别（增强版，支持自动重连）---------
+let nativeRecognition = null;
+let isListening = false;
 
-    function initNativeRecognition() {
-      if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-        updateStatus('❌ 当前浏览器不支持语音识别，请使用【手动标记】按钮', 'error');
-        voiceBtn.disabled = true;
-        voiceBtn.textContent = '🎤 语音不可用';
-        return;
-      }
-      nativeRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      nativeRecognition.lang = 'cmn-Hans-CN';
-      nativeRecognition.continuous = false;
-      nativeRecognition.interimResults = false;
+function initNativeRecognition() {
+  if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+    updateStatus('❌ 当前浏览器不支持语音识别，请使用【手动标记】按钮', 'error');
+    voiceBtn.disabled = true;
+    voiceBtn.textContent = '🎤 语音不可用';
+    return;
+  }
 
-      nativeRecognition.onresult = (event) => {
-        const command = event.results[0][0].transcript.trim();
+  nativeRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  nativeRecognition.lang = 'cmn-Hans-CN';
+  nativeRecognition.continuous = true;   // 尝试开启连续模式（实际重连由 onend 保证）
+  nativeRecognition.interimResults = false;
+
+  // 识别结果处理
+  nativeRecognition.onresult = (event) => {
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        const command = event.results[i][0].transcript.trim();
+        console.log('识别到:', command);
         handleNativeCommand(command);
-      };
+        updateStatus(`🗣️ 识别: ${command}`, 'normal');
+      }
+    }
+  };
 
-      nativeRecognition.onend = () => {
-        if (isListening) nativeRecognition.start();
-      };
-
-      nativeRecognition.onerror = (e) => {
-        console.warn('语音识别错误', e.error);
-        isListening = false;
-        voiceBtn.textContent = '🎤 语音控制';
-        if (e.error === 'not-allowed') {
-          updateStatus('🎤 麦克风权限被拒绝，请使用手动标记', 'error');
-          voiceBtn.disabled = true;
-        } else if (e.error === 'no-speech') {
-          updateStatus('未检测到语音，请重试', 'error');
-        } else {
-          updateStatus('语音识别异常，可使用手动标记', 'error');
+  // 自动重连核心逻辑
+  nativeRecognition.onend = () => {
+    console.log('语音识别服务已停止');
+    if (isListening) {
+      console.log('尝试重新连接语音服务...');
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
+      reconnectTimeout = setTimeout(() => {
+        try {
+          nativeRecognition.start();
+        } catch (e) {
+          console.error('重启失败:', e);
+          updateStatus('⚠️ 语音服务异常，请手动重启', 'error');
+          isListening = false;
+          voiceBtn.textContent = '🎤 语音控制';
         }
-      };
-
-      updateStatus('原生识别已就绪，清晰说出指令即可', 'normal');
+      }, 500);
+    } else {
+      updateStatus('已停止语音监听', 'normal');
+      voiceBtn.textContent = '🎤 语音控制';
     }
+  };
 
-    // 原生指令处理
-    function handleNativeCommand(command) {
-      updateStatus(`识别: ${command}`, 'normal');
-      const lower = command.toLowerCase();
-      // 关键词匹配
-      if (lower.includes('开始') || lower.includes('启动') || lower.includes('go') || lower.includes('运行')) {
-        startBtn.click();
-      } else if (lower.includes('暂停') || lower.includes('停止') || lower.includes('pause') || lower.includes('停一下')) {
-        pauseBtn.click();
-      } else if (lower.includes('标记') || lower.includes('记录') || lower.includes('标一下') || lower.includes('记时间')) {
-        addTimeNode();
-      } else if (lower.includes('重置') || lower.includes('清零') || lower.includes('重新开始') || lower.includes('清空')) {
-        resetBtn.click();
-      } else if (lower.includes('导出') || lower.includes('保存') || lower.includes('下载') || lower.includes('存记录')) {
-        exportBtn.click();
-      } else {
-        updateStatus(`未识别指令: ${command}，可尝试手动标记`, 'error');
+  // 错误处理
+  nativeRecognition.onerror = (e) => {
+    console.warn('语音识别错误', e.error);
+    if (e.error === 'not-allowed') {
+      updateStatus('❌ 麦克风权限被拒绝', 'error');
+      isListening = false;
+      voiceBtn.disabled = true;
+      voiceBtn.textContent = '🎤 权限已拒绝';
+    } else if (e.error === 'no-speech') {
+      // 无语音输入，onend 会处理重连
+      updateStatus('未检测到语音，继续聆听...', 'normal');
+    } else {
+      updateStatus(`❌ 语音错误: ${e.error}`, 'error');
+      if (isListening) {
+        nativeRecognition.stop(); // 触发 onend 进行重连
       }
     }
+  };
 
-    // 语音按钮点击（纯原生，无后端残留）
-    voiceBtn.addEventListener('click', () => {
-      if (voiceBtn.disabled) return;
-      if (!isListening) {
-        nativeRecognition.start();
-        isListening = true;
-        voiceBtn.textContent = '🎤 聆听中（点击停止）';
-      } else {
-        nativeRecognition.abort();
-        isListening = false;
-        voiceBtn.textContent = '🎤 语音控制';
-      }
-    });
+  updateStatus('原生识别已就绪，清晰说出指令即可', 'normal');
+}
 
     // ---------- PWA 安装 & Service Worker ----------
     // ---------- PWA 安装检测 ----------
