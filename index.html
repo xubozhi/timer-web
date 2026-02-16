@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>语音标记计时器 · 纯前端版</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#3498db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="计时器">
+
+  <!-- 图标全内嵌 base64，无需额外文件 -->
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAIRlWElmTU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABgAAAAAQAAAGAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAsOHjNwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAWRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDYuMC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD53d3cuaW5rc2NhcGUub3JnPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgqyyWIhAAADN0lEQVRYCdWXWahNURiAr1n3mmcylHkoxQMlpehKvPAkCg/KUIoiKRKXlMKr4skbLx7w4kHJLUQkD4aEzDLPXPP3HWvdNnfvs/e9R8lf3/nX/tf//2udtf619jlVVf9Y2lQ4/mDiO8ObCvO0KLyaqLtwA9q3KANBzV2B1sSMgVpYAjOhG3SCnvANnkENHAH9LkDFK9SFJCvhDHyGHxk0YD8FuxP9t2lPh1RplWr93TiPx+0wNpgd5Apcg6dgjj4wCvRJ24532GdDPRQWt2cnxG97j/ZmcAvStk7bOKiDhxDj1J9gPhQWk+2DmGQ/7QEp0ROwjU+xD8R2AGL8cdptU/wyTVtD8Ff06gyvfthfwCOwANNkPcbvgQ1pDmk2C+YLOPt1aQ7BNhxtQb4H74Ms2URH3IYpWU7R3oHGuRBwKBoz9DDs7u1bGJTho9ki9Ug6CU9I2a2w4nV8CUOhnBSdgDlGgxM19yxolNaNrV+NxeH5IPrWH32VPF4j+HBIEMdokq8XlifwHaY16W1qcIXiFlj1eeI3dwXugxdbSZIrMBJLb3ASl0u95T/c20h5z1+9F1GeGo+zBVyS5AQGB9sd9KvQzlIW0lbw1qsObe+OcvKcTr+9k24s2uQEuobo12iXqpyMoHNhcDDhIhgSnrOULypzK6lb4KWj+O3yxETJVfLUWOV5EnM7mZIkV8AXi+KLpV2plf3hXb8WLFgnvgZiPM1U6YjVGlNSfcfS4Q3omytvOXGp6gcO/gF6Qp5Y5J4a8Q5pIs7wKrj/mWc1EeXqLQ2+1kGerMDB3Jcgc4V3BaeT6OT28FiRuPdnwQnUlcvk+/wjuLdzyzk2s28B/g5uoQ7Pi90bnG+i++c5F+j3frkLTmBPAf+qvjg5uAEnIN4PNJstFmc9mMv66gGFZCpe8UI6SXtooajfnaz60+DgXsGToFkyB28vGBM8gOVQA3niH5VV8BiM9czXQotkMlEeGxPJFdgG08G97R4Ygp4BO+A6RP/ztCdCRWINbAF/+8XEai8sbWI72eeKbQRX46+JJ8I/J8fAqm6AOKi32x04CsvAQi4kRW6wtES+zRxE7STegL8j1P+X/AShRMA3XF9BXQAAAABJRU5ErkJggg==">
+  <link rel="apple-touch-icon" sizes="120x120" href="data:image/png;base64,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">
+  <!-- 更多图标省略，你的原有 base64 保留即可，此处为节省篇幅仅示意 -->
+
+  <style>
+    /* 基础样式与原有保持一致，仅作以下优化/新增 */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { max-width: 550px; margin: 0 auto; padding: 20px 15px; background-color: #f5f7fa; transition: background-color 0.3s; }
+    h2 { text-align: center; color: #2c3e50; margin: 10px 0 5px; font-size: 1.5em; }
+    .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 25px; font-size: 0.9em; }
+    #timer { font-size: clamp(2.5em, 12vw, 3.8em); font-weight: 700; text-align: center; color: #2c3e50; margin: 20px 0; font-variant-numeric: tabular-nums; }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; }
+    .btn-group button {
+      flex: 1 1 calc(50% - 10px); padding: 14px 5px; border: none; border-radius: 10px; font-size: 16px;
+      font-weight: 500; cursor: pointer; color: white; min-width: 130px; transition: all 0.2s;
+      touch-action: manipulation;
+    }
+    .btn-group button:active { transform: scale(0.98); }
+    #startBtn { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    #pauseBtn { background: linear-gradient(135deg, #f39c12, #e67e22); }
+    #resetBtn { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    #voiceBtn { background: linear-gradient(135deg, #3498db, #2980b9); display: flex; align-items: center; justify-content: center; gap: 6px; }
+    #exportBtn { background: linear-gradient(135deg, #9c27b0, #7b1fa2); flex: 1 1 100%; }
+
+    /* 状态栏重构：双行均分显示，窄屏自动居中 */
+    #statusBar {
+      background-color: #e8f4fc; color: #2980b9; padding: 12px 15px; margin: 0 0 20px; border-radius: 8px;
+      border-left: 4px solid #3498db; transition: all 0.3s; width: 100%;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    #statusMain {
+      font-size: 0.95em; line-height: 1.45; text-align: center; word-break: break-word;
+      width: 100%; hyphens: auto;
+    }
+    #statusSub {
+      font-size: 0.85em; line-height: 1.4; color: #2980b9; opacity: 0.9;
+      text-align: center; width: 100%; border-top: 1px dashed rgba(52,152,219,0.2); padding-top: 6px;
+    }
+    .statusBar.error { background-color: #fdeded; color: #e74c3c; border-left-color: #e74c3c; }
+    .statusBar.error #statusSub { color: #e74c3c; border-top-color: rgba(231,76,60,0.2); }
+    .statusBar.offline { background-color: #fff3cd; color: #f39c12; border-left-color: #f39c12; }
+    .statusBar.offline #statusSub { color: #f39c12; border-top-color: rgba(243,156,18,0.2); }
+
+    /* 语音提示区精简，仅保留原生指令 */
+    #voiceTips {
+      background: #f8f9fa; padding: 15px; margin: 0 0 20px; border-radius: 8px; font-size: 0.9em; display: none;
+    }
+    #voiceTips h4 { color: #2c3e50; margin-bottom: 10px; font-size: 1em; font-weight: 600; }
+    #voiceTips ul { padding-left: 20px; margin: 10px 0; color: #34495e; }
+    #voiceTips li { margin-bottom: 6px; }
+    #voiceTips .tip-note { color: #e74c3c; margin-top: 10px; font-size: 0.9em; }
+
+    /* 时间标记记录区域 - 新增手动添加按钮 */
+    .nodes-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 15px; flex-wrap: wrap; gap: 10px;
+    }
+    .nodes-header h3 { color: #2c3e50; font-size: 1.1em; font-weight: 600; margin: 0; }
+    .manual-mark-btn {
+      background: #3498db; color: white; border: none; border-radius: 20px;
+      padding: 6px 16px; font-size: 0.85em; display: flex; align-items: center; gap: 4px;
+      cursor: pointer; transition: 0.2s; touch-action: manipulation;
+    }
+    .manual-mark-btn:active { transform: scale(0.96); background: #2980b9; }
+    .manual-mark-btn:disabled { background: #95a5a6; pointer-events: none; }
+
+    .node-list { max-height: 300px; overflow-y: auto; padding-right: 5px; }
+    .node-list::-webkit-scrollbar { width: 6px; }
+    .node-list::-webkit-scrollbar-thumb { background-color: #ddd; border-radius: 3px; }
+    .node {
+      background: white; padding: 12px 15px; margin-bottom: 10px; border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid #3498db;
+      color: #34495e; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    }
+    .node span { min-width: 100px; text-align: center; font-weight: 500; }
+    .node input { flex: 1; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 0.9em; }
+    .node button { padding: 6px 12px; font-size: 0.85em; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .no-nodes { text-align: center; color: #7f8c8d; padding: 20px; font-size: 0.95em; }
+
+    .install-btn { position: fixed; bottom: 20px; right: 20px; padding: 12px 18px; background: linear-gradient(135deg, #3498db, #2980b9); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9em; display: none; z-index: 999; }
+    .copyright { text-align: center; font-size: 0.8em; color: #999; margin-top: 30px; padding-bottom: 20px; }
+    @media (prefers-color-scheme: dark) {
+      body { background-color: #1a1a2e; }
+      h2, .nodes-header h3, #timer { color: #f5f7fa; }
+      .subtitle { color: #bdc3c7; }
+      .node { background-color: #2d2d44; color: #f5f7fa; }
+      .node input { background-color: #3a3a52; border-color: #4a4a6a; color: #f5f7fa; }
+      #voiceTips { background: #2d2d44; color: #f5f7fa; }
+      .manual-mark-btn { background: #4a90e2; }
+    }
+  </style>
+</head>
+<body>
+  <h2>语音标记计时器</h2>
+  <p class="subtitle">支持语音控制开始/暂停/标记</p>
+  <div id="timer">00:00:00</div>
+  <div class="btn-group">
+    <button id="startBtn">开始计时</button>
+    <button id="pauseBtn" disabled>暂停计时</button>
+    <button id="resetBtn" disabled>重置全部</button>
+    <button id="voiceBtn">🎤 语音控制</button>
+    <button id="exportBtn" disabled>📥 导出记录</button>
+  </div>
+
+  <!-- 状态栏：双行均分 -->
+  <div id="statusBar">
+    <div id="statusMain">准备就绪，点击"开始"或语音指令启动计时</div>
+    <div id="statusSub">离线功能已就绪</div>
+  </div>
+
+  <!-- 语音指令提示区（原生识别） -->
+  <div id="voiceTips">
+    <h4>🗣️ 支持的语音指令</h4>
+    <ul>
+      <li><strong>开始计时</strong>："开始""启动""go""运行"</li>
+      <li><strong>暂停计时</strong>："暂停""停止""pause""停一下"</li>
+      <li><strong>标记时间</strong>："标记""记录""标一下""记时间"</li>
+      <li><strong>重置计时</strong>："重置""清零""重新开始""清空"</li>
+      <li><strong>导出记录</strong>："导出""保存""下载""存记录"</li>
+    </ul>
+    <p class="tip-note">💡 提示：请在安静环境下说出指令，系统将自动识别执行</p>
+    <p style="margin-top:10px; color:#3498db;">✅ 纯前端离线识别，无需任何服务器</p>
+  </div>
+
+  <!-- 时间标记记录区域 + 手动添加按钮 -->
+  <div id="nodes">
+    <div class="nodes-header">
+      <h3>📋 时间标记记录</h3>
+      <button id="manualMarkBtn" class="manual-mark-btn" disabled>➕ 手动标记</button>
+    </div>
+    <div class="node-list">
+      <div class="no-nodes">暂无标记记录，开始计时后可语音或点击【手动标记】添加</div>
+    </div>
+  </div>
+
+  <div class="copyright">
+    © 2026 语音标记计时器 | 基于PWA开发 适配移动端/桌面端<br>
+    <small>计时器图标来源: <a href="https://www.flaticon.com/free-icons/chrono" target="_blank" rel="noopener">Flaticon</a></small>
+  </div>
+  <button class="install-btn" id="installBtn">安装到设备</button>
+
+  <script>
+    // ---------- 计时器核心 ----------
+    let timerInterval = null;
+    let startTime = 0;
+    let elapsedTime = 0;
+    let isRunning = false;
+    let timeNodes = [];
+
+    const timerEl = document.getElementById('timer');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const statusMain = document.getElementById('statusMain');
+    const statusSub = document.getElementById('statusSub');
+    const statusBar = document.getElementById('statusBar');
+    const voiceTips = document.getElementById('voiceTips');
+    const nodeListEl = document.querySelector('.node-list');
+    const installBtn = document.getElementById('installBtn');
+    const manualMarkBtn = document.getElementById('manualMarkBtn');
+
+    function updateTimer() {
+      const totalSeconds = Math.floor(elapsedTime / 1000);
+      const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+      const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+      const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+      timerEl.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    // 开始计时
+    startBtn.addEventListener('click', () => {
+      if (!isRunning) {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(() => {
+          elapsedTime = Date.now() - startTime;
+          updateTimer();
+        }, 1000);
+        isRunning = true;
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        resetBtn.disabled = false;
+        exportBtn.disabled = false;
+        manualMarkBtn.disabled = false;   // 计时开始后允许手动标记
+        updateStatus('计时中（原生识别）', 'normal');
+      }
+    });
+
+    // 暂停计时
+    pauseBtn.addEventListener('click', () => {
+      if (isRunning) {
+        clearInterval(timerInterval);
+        isRunning = false;
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+        updateStatus('已暂停（原生识别）', 'normal');
+      }
+    });
+
+    // 重置
+    resetBtn.addEventListener('click', () => {
+      clearInterval(timerInterval);
+      isRunning = false;
+      elapsedTime = 0;
+      timeNodes = [];
+      updateTimer();
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+      resetBtn.disabled = true;
+      exportBtn.disabled = true;
+      manualMarkBtn.disabled = true;    // 重置后禁用手动标记
+      updateNodeList();
+      updateStatus('已重置，原生识别已就绪', 'normal');
+    });
+
+    // ---------- 手动添加标记（语音不可用的完美替代）--------
+    function addTimeNode(label = '') {
+      if (!isRunning) {
+        updateStatus('请先开始计时再添加标记', 'error');
+        return;
+      }
+      const currentTime = timerEl.textContent;
+      const node = {
+        id: Date.now(),
+        time: currentTime,
+        label: label || `标记${timeNodes.length + 1}`
+      };
+      timeNodes.push(node);
+      updateNodeList();
+      updateStatus(`✅ 已标记时间：${currentTime}`, 'normal');
+    }
+
+    manualMarkBtn.addEventListener('click', () => {
+      addTimeNode();
+    });
+
+    // 更新标记列表
+    function updateNodeList() {
+      if (timeNodes.length === 0) {
+        nodeListEl.innerHTML = '<div class="no-nodes">暂无标记记录，开始计时后可语音或点击【手动标记】添加</div>';
+        return;
+      }
+      nodeListEl.innerHTML = timeNodes.map(node => `
+        <div class="node" data-id="${node.id}">
+          <span>${node.time}</span>
+          <input type="text" value="${node.label}" placeholder="标记说明" onchange="updateNodeLabel(${node.id}, this.value)">
+          <button onclick="deleteNode(${node.id})">删除</button>
+        </div>
+      `).join('');
+    }
+
+    window.updateNodeLabel = (id, label) => {
+      const node = timeNodes.find(n => n.id === id);
+      if (node) node.label = label;
+    };
+
+    window.deleteNode = (id) => {
+      timeNodes = timeNodes.filter(n => n.id !== id);
+      updateNodeList();
+      updateStatus('已删除该标记', 'normal');
+    };
+
+    // 导出记录
+    exportBtn.addEventListener('click', () => {
+      if (timeNodes.length === 0) {
+        updateStatus('暂无记录可导出', 'error');
+        return;
+      }
+      const csvContent = `时间,标记说明\n${timeNodes.map(node => `${node.time},${node.label}`).join('\n')}`;
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `计时记录_${new Date().toLocaleDateString()}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      updateStatus('记录已导出为CSV文件', 'normal');
+    });
+
+    // 更新状态栏（双行版）
+    function updateStatus(text, type = 'normal') {
+      statusMain.textContent = text;
+      statusBar.className = '';
+      statusBar.classList.add('statusBar');
+      statusBar.classList.add(type);
+    }
+
+    // ---------- 纯前端原生语音识别（已彻底移除后端）--------
+    let nativeRecognition = null;
+    let isListening = false;
+
+    function initNativeRecognition() {
+      if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+        updateStatus('❌ 当前浏览器不支持语音识别，请使用【手动标记】按钮', 'error');
+        voiceBtn.disabled = true;
+        voiceBtn.textContent = '🎤 语音不可用';
+        return;
+      }
+      nativeRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      nativeRecognition.lang = 'cmn-Hans-CN';
+      nativeRecognition.continuous = false;
+      nativeRecognition.interimResults = false;
+
+      nativeRecognition.onresult = (event) => {
+        const command = event.results[0][0].transcript.trim();
+        handleNativeCommand(command);
+      };
+
+      nativeRecognition.onend = () => {
+        if (isListening) nativeRecognition.start();
+      };
+
+      nativeRecognition.onerror = (e) => {
+        console.warn('语音识别错误', e.error);
+        isListening = false;
+        voiceBtn.textContent = '🎤 语音控制';
+        if (e.error === 'not-allowed') {
+          updateStatus('🎤 麦克风权限被拒绝，请使用手动标记', 'error');
+          voiceBtn.disabled = true;
+        } else if (e.error === 'no-speech') {
+          updateStatus('未检测到语音，请重试', 'error');
+        } else {
+          updateStatus('语音识别异常，可使用手动标记', 'error');
+        }
+      };
+
+      updateStatus('原生识别已就绪，清晰说出指令即可', 'normal');
+    }
+
+    // 原生指令处理
+    function handleNativeCommand(command) {
+      updateStatus(`识别: ${command}`, 'normal');
+      const lower = command.toLowerCase();
+      // 关键词匹配
+      if (lower.includes('开始') || lower.includes('启动') || lower.includes('go') || lower.includes('运行')) {
+        startBtn.click();
+      } else if (lower.includes('暂停') || lower.includes('停止') || lower.includes('pause') || lower.includes('停一下')) {
+        pauseBtn.click();
+      } else if (lower.includes('标记') || lower.includes('记录') || lower.includes('标一下') || lower.includes('记时间')) {
+        addTimeNode();
+      } else if (lower.includes('重置') || lower.includes('清零') || lower.includes('重新开始') || lower.includes('清空')) {
+        resetBtn.click();
+      } else if (lower.includes('导出') || lower.includes('保存') || lower.includes('下载') || lower.includes('存记录')) {
+        exportBtn.click();
+      } else {
+        updateStatus(`未识别指令: ${command}，可尝试手动标记`, 'error');
+      }
+    }
+
+    // 语音按钮点击（纯原生，无后端残留）
+    voiceBtn.addEventListener('click', () => {
+      if (voiceBtn.disabled) return;
+      if (!isListening) {
+        nativeRecognition.start();
+        isListening = true;
+        voiceBtn.textContent = '🎤 聆听中（点击停止）';
+      } else {
+        nativeRecognition.abort();
+        isListening = false;
+        voiceBtn.textContent = '🎤 语音控制';
+      }
+    });
+
+    // ---------- PWA 安装 & Service Worker ----------
+    // ---------- PWA 安装检测 ----------
+let deferredPrompt = null;
+
+function isPwaInstalled() {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.matchMedia("(display-mode: window-controls-overlay)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // 仅在未安装时显示按钮
+  if (!isPwaInstalled()) {
+    installBtn.style.display = "block";
+  }
+});
+
+window.addEventListener("appinstalled", () => {
+  installBtn.style.display = "none";
+  deferredPrompt = null;
+  console.log("PWA installed");
+});
+
+installBtn.addEventListener("click", () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        updateStatus("已安装到设备", "normal");
+      }
+      deferredPrompt = null;
+      installBtn.style.display = "none";
+    });
+  }
+});
+
+// 页面启动时立即检查
+if (isPwaInstalled()) {
+  installBtn.style.display = "none";
+}
+
+
+    // Service Worker 注册（离线缓存）
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => {
+            console.log('SW 注册成功');
+            statusSub.style.display = 'block';   // 离线功能就绪
+          })
+          .catch(err => {
+            console.warn('SW 注册失败', err);
+            statusSub.style.display = 'none';    // 无离线缓存，隐藏
+          });
+      });
+    } else {
+      statusSub.style.display = 'none';
+    }
+
+    // 离线/在线检测
+    window.addEventListener('offline', () => {
+      updateStatus('离线模式，语音识别正常工作', 'offline');
+    });
+    window.addEventListener('online', () => {
+      updateStatus('在线模式，语音识别正常工作', 'normal');
+    });
+
+    // 页面启动
+    window.onload = () => {
+      updateTimer();
+      initNativeRecognition();
+      // 初始时无计时，手动标记禁用
+      manualMarkBtn.disabled = true;
+    };
+  </script>
+</body>
+</html>
