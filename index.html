@@ -375,6 +375,30 @@ function initNativeRecognition() {
   updateStatus('原生识别已就绪，清晰说出指令即可', 'normal');
 }
 
+// 语音按钮点击事件
+voiceBtn.addEventListener('click', () => {
+  console.log('[语音] 按钮被点击');
+  if (voiceBtn.disabled) return;
+  if (!isListening) {
+    try {
+      console.log('[语音] 尝试启动识别');
+      nativeRecognition.start();
+      isListening = true;
+      voiceBtn.textContent = '🎤 聆听中（点击停止）';
+      updateStatus('语音识别已开启，请说话...', 'normal');
+    } catch (e) {
+      console.error('[语音] 启动失败', e);
+    }
+  } else {
+    console.log('[语音] 停止识别');
+    isListening = false;
+    nativeRecognition.abort();
+    if (reconnectTimeout) clearTimeout(reconnectTimeout);
+    voiceBtn.textContent = '🎤 语音控制';
+    updateStatus('语音识别已手动停止', 'normal');
+  }
+});
+
     // ---------- PWA 安装 & Service Worker ----------
     // ---------- PWA 安装检测 ----------
 let deferredPrompt = null;
