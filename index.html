@@ -357,20 +357,38 @@ function initNativeRecognition() {
   nativeRecognition.onerror = (e) => {
     console.warn('语音识别错误', e.error);
     if (e.error === 'not-allowed') {
-      updateStatus('❌ 麦克风权限被拒绝', 'error');
+      updateStatus('❌ 麦克风权限被拒绝，请授权后重试', 'error');
       isListening = false;
       voiceBtn.disabled = true;
       voiceBtn.textContent = '🎤 权限已拒绝';
+      // 清除任何待处理的重连
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
     } else if (e.error === 'no-speech') {
-      // 无语音输入，onend 会处理重连
+      // 无语音输入，正常，onend 会处理重连
       updateStatus('未检测到语音，继续聆听...', 'normal');
+    } else if (e.error === 'network') {
+      // 网络错误：停止自动重连，提示用户
+      updateStatus('❌ 语音服务网络错误，请检查网络后手动重试', 'error');
+      isListening = false;
+      voiceBtn.textContent = '🎤 语音控制';
+      // 清除重连定时器，防止自动重试
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
+      // 注意：不要调用 stop()，因为识别器已出错，只需重置状态
     } else {
-      updateStatus(`❌ 语音错误: ${e.error}`, 'error');
-      if (isListening) {
-        nativeRecognition.stop(); // 触发 onend 进行重连
-      }
+      // 其他错误（包括 aborted 等）
+      updateStatus(`❌ 语音错误: ${e.error}，请重试`, 'error');
+      // 对于非致命错误，可以尝试重连（但需谨慎）
+      if (isListening && e.error !== 'aborted') {
+      // 避免因 aborted 重连导致循环
+      nativeRecognition.stop();
+    } else {
+      // 如果是 aborted 或未知错误，停止监听并重置
+      isListening = false;
+      voiceBtn.textContent = '🎤 语音控制';
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
     }
-  };
+  }
+};
 
   updateStatus('原生识别已就绪，清晰说出指令即可', 'normal');
 }
