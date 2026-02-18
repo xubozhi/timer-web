@@ -393,6 +393,26 @@ function initNativeRecognition() {
   updateStatus('原生识别已就绪，清晰说出指令即可', 'normal');
 }
 
+    // 原生指令处理
+    function handleNativeCommand(command) {
+      updateStatus(`识别: ${command}`, 'normal');
+      const lower = command.toLowerCase();
+      // 关键词匹配
+      if (lower.includes('开始') || lower.includes('启动') || lower.includes('go') || lower.includes('运行')) {
+        startBtn.click();
+      } else if (lower.includes('暂停') || lower.includes('停止') || lower.includes('pause') || lower.includes('停一下')) {
+        pauseBtn.click();
+      } else if (lower.includes('标记') || lower.includes('记录') || lower.includes('标一下') || lower.includes('记时间')) {
+        addTimeNode();
+      } else if (lower.includes('重置') || lower.includes('清零') || lower.includes('重新开始') || lower.includes('清空')) {
+        resetBtn.click();
+      } else if (lower.includes('导出') || lower.includes('保存') || lower.includes('下载') || lower.includes('存记录')) {
+        exportBtn.click();
+      } else {
+        updateStatus(`未识别指令: ${command}，可尝试手动标记`, 'error');
+      }
+    }
+
 // 语音按钮点击事件
 voiceBtn.addEventListener('click', () => {
   console.log('[语音] 按钮被点击');
