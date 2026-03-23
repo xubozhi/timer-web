@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>语音标记计时器 · 纯前端版</title>
+  <title>语音标记计时器 v1.3 · 纯前端版</title>
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#3498db">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,9 +11,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="计时器">
 
-  <!-- 图标 Base64（保留原有） -->
+  <!-- 图标 Base64 -->
   <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAIRlWElmTU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABgAAAAAQAAAGAAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAsOHjNwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAWRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDYuMC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIj4KICAgICAgICAgPHhtcDpDcmVhdG9yVG9vbD53d3cuaW5rc2NhcGUub3JnPC94bXA6Q3JlYXRvclRvb2w+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgqyyWIhAAADN0lEQVRYCdWXWahNURiAr1n3mmcylHkoxQMlpehKvPAkCg/KUIoiKRKXlMKr4skbLx7w4kHJLUQkD4aEzDLPXPP3HWvdNnfvs/e9R8lf3/nX/tf//2udtf619jlVVf9Y2lQ4/mDiO8ObCvO0KLyaqLtwA9q3KANBzV2B1sSMgVpYAjOhG3SCnvANnkENHAH9LkDFK9SFJCvhDHyGHxk0YD8FuxP9t2lPh1RplWr93TiPx+0wNpgd5Apcg6dgjj4wCvRJ24532GdDPRQWt2cnxG97j/ZmcAvStk7bOKiDhxDj1J9gPhQWk+2DmGQ/7QEp0ROwjU+xD8R2AGL8cdptU/wyTVtD8Ff06gyvfthfwCOwANNkPcbvgQ1pDmk2C+YLOPt1aQ7BNhxtQb4H74Ms2URH3IYpWU7R3oHGuRBwKBoz9DDs7u1bGJTho9ki9Ug6CU9I2a2w4nV8CUOhnBSdgDlGgxM19yxolNaNrV+NxeH5IPrWH32VPF4j+HBIEMdokq8XlifwHaY16W1qcIXiFlj1eeI3dwXugxdbSZIrMBJLb3ASl0u95T/c20h5z1+9F1GeGo+zBVyS5AQGB9sd9KvQzlIW0lbw1qsObe+OcvKcTr+9k24s2uQEuobo12iXqpyMoHNhcDDhIhgSnrOULypzK6lb4KWj+O3yxETJVfLUWOV5EnM7mZIkV8AXi+KLpV2plf3hXb8WLFgnvgZiPM1U6YjVGlNSfcfS4Q3omytvOXGp6gcO/gF6Qp5Y5J4a8Q5pIs7wKrj/mWc1EeXqLQ2+1kCerMDB3Jcgc4V3BaeT6OT28FiRuPdnwQnUlcvk+/wjuLdzyzk2s28B/g5uoQ7Pi90bnG+i++c5F+j3frkLTmBPAf+qvjg5uAEnIN4PNJstFmc9mMv66gGFZCpe8UI6SXtooajfnaz60+DgXsGToFkyB28vGBM8gOVQA3niH5VV8BiM9czXQotkMlEeGxPJFdgG08G97R4Ygp4BO+A6RP/ztCdCRWINbAF/+8XEai8sbWI72eeKbQRX46+JJ8I/J8fAqm6AOKi32x04CsvAQi4kRW6wtES+zRxE7STegL8j1P+X/AShRMA3XF9BXQAAAABJRU5ErkJggg==">
-  <link rel="apple-touch-icon" sizes="120x120" href="data:image/png;base64,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">
+  <link rel="apple-touch-icon" sizes="120x120" href="data:image/png;base64,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">
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -100,8 +100,8 @@
   </style>
 </head>
 <body>
-  <h2>语音标记计时器</h2>
-  <p class="subtitle">支持语音控制开始/暂停/标记</p>
+  <h2>语音标记计时器 v1.3</h2>
+  <p class="subtitle">支持语音控制开始/暂停/标记 · 修复结果捕捉问题</p>
   <div id="timer">00:00:00</div>
   <div class="btn-group">
     <button id="startBtn">开始计时</button>
@@ -119,14 +119,15 @@
   <div id="voiceTips">
     <h4>🗣️ 支持的语音指令</h4>
     <ul>
-      <li><strong>开始计时</strong>："开始""启动""go""运行"</li>
-      <li><strong>暂停计时</strong>："暂停""停止""pause""停一下"</li>
-      <li><strong>标记时间</strong>："标记""记录""标一下""记时间"</li>
-      <li><strong>重置计时</strong>："重置""清零""重新开始""清空"</li>
-      <li><strong>导出记录</strong>："导出""保存""下载""存记录"</li>
+      <li><strong>开始计时</strong>："开始""启动""go""运行""计时"</li>
+      <li><strong>暂停计时</strong>："暂停""停止""pause""停一下""停"</li>
+      <li><strong>标记时间</strong>："标记""记录""标一下""记时间""打点"</li>
+      <li><strong>重置计时</strong>："重置""清零""重新开始""清空""reset"</li>
+      <li><strong>导出记录</strong>："导出""保存""下载""存记录""export"</li>
     </ul>
     <p class="tip-note">💡 提示：请在安静环境下说出指令，系统将自动识别执行</p>
     <p style="margin-top:10px; color:#3498db;">✅ 纯前端离线识别，无需任何服务器</p>
+    <p style="margin-top:6px; color:#27ae60; font-size:0.85em;">🔧 v1.3 修复：结果捕捉优化 · 去重处理 · 指数退避重连</p>
   </div>
 
   <div id="nodes">
@@ -293,7 +294,7 @@
       statusBar.classList.add(type);
     }
 
-    // ==================== 语音识别兼容性模块（修复版）====================
+    // ==================== 语音识别兼容性模块（v1.3 终极修复版）====================
     const SpeechModule = {
       recognition: null,
       isListening: false,
@@ -302,7 +303,9 @@
       iosVersion: null,
       reconnectAttempts: 0,
       maxReconnectAttempts: 3,
-      reconnectDelay: 800,
+      reconnectDelay: 1000,
+      lastTranscript: '',
+      resultBuffer: [],
       
       init: function() {
         this.detectPlatform();
@@ -379,23 +382,21 @@
         try {
           this.recognition = new SpeechRecognition();
           
-          // 关键配置修复 - 兼容 iOS/Windows
           this.recognition.continuous = true;
           this.recognition.interimResults = true;
           this.recognition.lang = 'zh-CN';
           this.recognition.maxAlternatives = 3;
           
-          // iOS 特定处理
           if (this.platform === 'iOS') {
             console.log('[Speech] iOS 设备，启用兼容模式');
-            this.recognition.lang = 'zh-CN';
             this.recognition.continuous = true;
+            this.recognition.interimResults = false;
           }
           
-          // Windows 特定处理
           if (this.platform === 'Windows') {
-            console.log('[Speech] Windows 设备，启用 continuous 模式');
+            console.log('[Speech] Windows 设备，启用连续识别模式');
             this.recognition.continuous = true;
+            this.recognition.interimResults = true;
           }
           
           this.recognition.onstart = this.onStart.bind(this);
@@ -420,6 +421,8 @@
         try {
           this.reconnectAttempts = 0;
           this.isListening = true;
+          this.lastTranscript = '';
+          this.resultBuffer = [];
           this.recognition.start();
           console.log('[Speech] Started');
         } catch (e) {
@@ -439,6 +442,8 @@
       
       onStart: function() {
         this.reconnectAttempts = 0;
+        this.lastTranscript = '';
+        this.resultBuffer = [];
         this.updateVoiceBtnState(true);
         console.log('[Speech] OnStart');
       },
@@ -449,7 +454,9 @@
         
         if (this.isListening && this.reconnectAttempts < this.maxReconnectAttempts) {
           this.reconnectAttempts++;
-          console.log('[Speech] Auto reconnecting...', this.reconnectAttempts);
+          const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
+          console.log('[Speech] Auto reconnecting...', this.reconnectAttempts, 'delay:', delay);
+          updateStatus(`🔄 语音识别重连中... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`, 'offline');
           setTimeout(() => {
             try {
               this.recognition.start();
@@ -458,7 +465,7 @@
               this.isListening = false;
               this.showHint('语音识别连接失败，请使用【手动标记】按钮');
             }
-          }, this.reconnectDelay);
+          }, delay);
         } else if (this.reconnectAttempts >= this.maxReconnectAttempts) {
           this.showHint('语音识别连接失败次数过多，请刷新页面重试');
           this.isListening = false;
@@ -466,20 +473,46 @@
       },
       
       onResult: function(event) {
-        // 获取最新结果
-        const results = event.results[event.results.length - 1];
-        const transcript = results[0].transcript.trim();
-        const confidence = results[0].confidence || 0;
-        
-        console.log('[Speech] Result:', {
-          transcript: transcript,
-          confidence: confidence,
-          isFinal: results.isFinal
+        console.log('[Speech] OnResult:', {
+          resultIndex: event.resultIndex,
+          resultsLength: event.results.length,
+          results: Array.from(event.results).map(r => ({
+            transcript: r[0].transcript,
+            isFinal: r.isFinal
+          }))
         });
         
-        // 处理最终结果或高置信度结果（iOS/Windows 兼容）
-        if (results.isFinal || confidence > 0.6) {
-          this.handleVoiceCommand(transcript);
+        const newResults = [];
+        for (let i = event.resultIndex || 0; i < event.results.length; i++) {
+          newResults.push(event.results[i]);
+        }
+        
+        console.log('[Speech] New results count:', newResults.length);
+        
+        for (const result of newResults) {
+          const transcript = result[0].transcript.trim();
+          const confidence = result[0].confidence || 0;
+          const isFinal = result.isFinal;
+          
+          console.log('[Speech] Processing result:', {
+            transcript: transcript,
+            confidence: confidence,
+            isFinal: isFinal
+          });
+          
+          if (transcript && transcript === this.lastTranscript) {
+            console.log('[Speech] Duplicate transcript, skipping');
+            continue;
+          }
+          
+          if (this.platform === 'iOS' && !isFinal) {
+            continue;
+          }
+          
+          if (isFinal || confidence > 0.7) {
+            this.lastTranscript = transcript;
+            this.handleVoiceCommand(transcript);
+          }
         }
       },
       
@@ -523,7 +556,6 @@
       },
       
       handleVoiceCommand: function(transcript) {
-        // 1. 标准化处理：去除空格、标点，转小写
         const normalized = transcript.trim()
           .toLowerCase()
           .replace(/[,.!?;:，。！？；：\s]/g, '');
@@ -532,14 +564,12 @@
         
         updateStatus(`🗣️ 识别："${transcript}"`, 'normal');
         
-        // 2. 定义指令关键词（支持多种说法）
-        const startCommands = ['开始', '启动', 'go', '运行', '计时', 'start', '计时开始', '开始计时'];
+        const startCommands = ['开始', '启动', 'go', '运行', '计时', 'start', '计时开始', '开始计时', '开', '起'];
         const pauseCommands = ['暂停', '停止', 'pause', '停一下', '停', '暂停计时', '停止计时'];
         const markCommands = ['标记', '记录', '标一下', '记时间', '打点', 'mark', '打个标记'];
         const resetCommands = ['重置', '清零', '重新开始', '清空', 'reset', '重置计时', '全部重置'];
         const exportCommands = ['导出', '保存', '下载', '存记录', 'export', '导出记录', '保存记录'];
         
-        // 3. 模糊匹配检查（使用 includes）
         let matched = false;
         
         for (const cmd of startCommands) {
@@ -611,7 +641,6 @@
           }
         }
         
-        // 4. 未匹配时提示
         if (!matched) {
           updateStatus(`❓ 未识别指令："${transcript}"\n💡 试试说："开始"、"暂停"、"标记"`, 'error');
           console.warn('[Speech] 未匹配指令:', normalized);
@@ -724,6 +753,11 @@
       updateTimer();
       SpeechModule.init();
       manualMarkBtn.disabled = true;
+      
+      if (!localStorage.getItem('v1.3_notified')) {
+        updateStatus('🎉 v1.3 已更新！语音结果捕捉优化', 'normal');
+        localStorage.setItem('v1.3_notified', 'true');
+      }
     };
   </script>
 </body>
